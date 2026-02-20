@@ -62,7 +62,7 @@ button{
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="password" placeholder="Password">
 
-<button onclick="signUp()">Sign Up</button>
+<button id="signupBtn">Sign Up</button>
 <button onclick="login()">Login</button>
 
 <div class="link" onclick="forgotPassword()">Forgot Password?</div>
@@ -103,41 +103,22 @@ const password=document.getElementById("password").value;
 
 const { error } = await supabase.auth.signUp({ email, password });
 
-document.getElementById("message").innerText =
-error ? error.message : "Signup successful! Check your email.";
-}
+document.getElementById("signupBtn").addEventListener("click", async function() {
 
-async function login(){
-const email=document.getElementById("email").value;
-const password=document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signUp({
+    email,
+    password
+  });
 
-if(error){
-document.getElementById("message").innerText = error.message;
-}else{
-document.getElementById("authBox").style.display="none";
-document.getElementById("welcome").style.display="block";
-document.getElementById("message").innerText="";
-}
-}
+  if(error){
+    document.getElementById("message").innerText = error.message;
+  } else {
+    document.getElementById("message").innerText = "Signup successful!";
+  }
 
-async function logout(){
-await supabase.auth.signOut();
-document.getElementById("authBox").style.display="block";
-document.getElementById("welcome").style.display="none";
-}
-
-async function forgotPassword(){
-const email=document.getElementById("email").value;
-
-if(!email){
-document.getElementById("message").innerText="Enter your email first.";
-return;
-}
-
-const { error } = await supabase.auth.resetPasswordForEmail(email, {
-redirectTo: window.location.origin
 });
 
 document.getElementById("message").innerText =
@@ -152,4 +133,5 @@ box.style.display = box.style.display==="none" ? "block" : "none";
 </script>
 
 </body>
+
 </html>
